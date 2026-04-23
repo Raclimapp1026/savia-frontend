@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import api from '../../api/client';
 import toast from 'react-hot-toast';
-import { Send, CheckCircle, Copy, Loader2 } from 'lucide-react';
+import { Send, CheckCircle, Copy, Loader2, Search, LogIn } from 'lucide-react';
 
 export default function ReportarPage() {
   const [searchParams] = useSearchParams();
@@ -130,6 +130,16 @@ export default function ReportarPage() {
             {cargando ? <><Loader2 className="animate-spin" size={18}/> Enviando...</> : <><Send size={18}/> Enviar solicitud</>}
           </button>
         </form>
+
+        {/* Navegación */}
+        <div className="px-6 pb-6 pt-2 flex gap-3">
+          <a href="/consultar" className="flex-1 py-2.5 border border-[#d1ddd6] rounded-lg text-sm font-medium text-[#0a4a2d] hover:bg-[#f0f5f2] text-center transition-all flex items-center justify-center gap-2">
+            <Search size={16}/> Consultar ticket
+          </a>
+          <a href="/login" className="flex-1 py-2.5 border border-[#0a4a2d] rounded-lg text-sm font-medium text-[#0a4a2d] hover:bg-[#0a4a2d] hover:text-white text-center transition-all flex items-center justify-center gap-2">
+            <LogIn size={16}/> Iniciar sesión
+          </a>
+        </div>
       </div>
     </div>
   );
