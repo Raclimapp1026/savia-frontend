@@ -18,15 +18,21 @@ export default function DashboardPage() {
   const [tecnicos, setTecnicos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  useEffect(() => {
-    Promise.all([
-      api.get('/tickets/metricas'),
-      api.get('/usuarios/tecnicos'),
-    ])
-      .then(([m, t]) => { setMetricas(m.data); setTecnicos(t.data); })
-      .catch(() => toast.error('Error cargando datos'))
-      .finally(() => setCargando(false));
-  }, []);
+ useEffect(() => {
+  Promise.allSettled([
+    api.get('/tickets/metricas'),
+    api.get('/usuarios/tecnicos'),
+  ]).then(([metricasResult, tecnicosResult]) => {
+    if (metricasResult.status === 'fulfilled') {
+      setMetricas(metricasResult.value.data);
+    } else {
+      toast.error('Error cargando métricas');
+    }
+    if (tecnicosResult.status === 'fulfilled') {
+      setTecnicos(tecnicosResult.value.data);
+    }
+  }).finally(() => setCargando(false));
+}, []);
 
   if (cargando) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-[#08ae62]" size={32}/></div>;
   if (!metricas) return null;
