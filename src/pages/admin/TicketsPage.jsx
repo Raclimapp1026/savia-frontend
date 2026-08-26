@@ -118,11 +118,17 @@ export default function TicketsPage() {
 
   const fmt = (f) => f ? new Date(f).toLocaleDateString('es-CO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
   const fotoURL = (path) => {
-    if (!path) return null;
-    if (path.startsWith('http')) return path;
-    const base = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
-    return `${base}${path}`;
-  };
+  if (!path) return '';
+  // Si la ruta ya es absoluta (comienza con http), devolverla tal cual
+  if (path.startsWith('http')) return path;
+
+  // Obtener la base para archivos estáticos (sin '/api')
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://api.saviaticpuerto.cloud/api';
+  const baseURL = apiUrl.replace(/\/api\/?$/, ''); // quita '/api' final
+
+  // Construir URL completa con la ruta relativa
+  return `${baseURL}${path.startsWith('/') ? path : '/' + path}`;
+};
 
   const descargarPDFTicket = (ticket) => {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
